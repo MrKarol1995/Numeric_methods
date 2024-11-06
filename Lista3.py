@@ -1,7 +1,9 @@
 import numpy as np
 import time
+import matplotlib.pyplot as plt
+from scipy.linalg import solve
 
-
+print("Zad 1")
 # Funkcja do generowania macierzy Hilberta
 def hilbert_matrix(n):
     """Tworzy macierz Hilberta o wymiarach n x n."""
@@ -91,10 +93,9 @@ print(f"Czas wykonania: {time_gauss:.6f} sekund")
 print("\nPorównanie dokładności:")
 print("Różnica między rozwiązaniami:", np.linalg.norm(solution_iterative - solution_gauss))
 
-# Zad2
+# Zad 2
 
-
-
+print("Zad 2")
 def create_tridiagonal_matrix(n):
     """Tworzy macierz trójdiagonalną o wymiarach n x n."""
     A = np.zeros((n, n))
@@ -146,3 +147,114 @@ solution = gauss_seidel(A, b)
 # Wyświetlanie wyników
 print("Rozwiązanie układu równań:")
 print(solution)
+
+# Zad 3
+print("Zad 3")
+
+
+def solve_linear_system(A, b):
+    """
+    Rozwiązuje układ równań liniowych Ax = b przy użyciu metody dokładnej.
+
+    Parametry:
+    - A: macierz współczynników (numpy array)
+    - b: wektor wyrazów wolnych (numpy array)
+
+    Zwraca:
+    - x: rozwiązanie układu równań (numpy array)
+    - czas_rozwiązania: czas wykonania obliczeń w sekundach (float)
+    """
+    start_time = time.time()  # Rozpocznij pomiar czasu
+    x = solve(A, b)
+    end_time = time.time()  # Zakończ pomiar czasu
+    czas_rozwiązania = end_time - start_time
+    return x, czas_rozwiązania
+
+
+def create_matrix_B():
+    """
+    Tworzy macierz B o rozmiarze 20x20 z określonymi wartościami:
+    - 0.025, 0.05, 0.075, ..., 0.5 na głównej diagonali
+    - 5 na diagonali powyżej głównej
+
+    Zwraca:
+    - B: macierz 20x20 (numpy array)
+    """
+    B = np.zeros((20, 20))
+    # Wypełnienie głównej diagonali wartościami od 0.025 do 0.5
+    diagonal_values = np.linspace(0.025, 0.5, 20)
+    np.fill_diagonal(B, diagonal_values)
+
+    # Wypełnienie diagonali powyżej głównej wartością 5
+    for i in range(19):
+        B[i, i + 1] = 5
+
+    return B
+
+
+def iterative_process(B, num_iterations=100):
+    """
+    Wykonuje iteracyjny proces x^(k+1) = B * x^(k) dla num_iterations kroków.
+    Oblicza i zapisuje wartość eta_k = ||x^(k)||_2 / ||x^(0)||_2 dla każdego kroku.
+
+    Parametry:
+    - B: macierz iteracyjna (numpy array)
+    - num_iterations: liczba iteracji (int)
+
+    Zwraca:
+    - eta_values: lista wartości eta_k dla każdego k
+    - k_min: najmniejsze k, dla którego ||x^(k)||_2 < ||x^(0)||_2
+    """
+    # Inicjalizacja wektora x^(0) jako wektora jedynek
+    x = np.ones(20)
+    eta_values = []
+    initial_norm = np.linalg.norm(x, 2)  # ||x^(0)||_2
+
+    k_min = None
+    for k in range(1, num_iterations + 1):
+        # Obliczenie x^(k+1)
+        x = B @ x
+        # Obliczenie eta_k = ||x^(k)||_2 / ||x^(0)||_2
+        current_norm = np.linalg.norm(x, 2)
+        eta_k = current_norm / initial_norm
+        eta_values.append(eta_k)
+
+        # Sprawdzenie warunku, kiedy ||x^(k)||_2 < ||x^(0)||_2
+        if k_min is None and eta_k < 1:
+            k_min = k
+
+    return eta_values, k_min
+
+
+def plot_eta_values(eta_values):
+    """
+    Rysuje wykres wartości eta_k w zależności od liczby iteracji.
+
+    Parametry:
+    - eta_values: lista wartości eta_k dla każdego k
+    """
+    plt.plot(eta_values, marker='o')
+    plt.xlabel('Iteracja k')
+    plt.ylabel(r'$\eta_k = \frac{||x^{(k)}||_2}{||x^{(0)}||_2}$')
+    plt.title('Wartości $\eta_k$ w zależności od liczby iteracji')
+    plt.grid(True)
+    plt.show()
+
+
+# Przykład użycia funkcji dla Zadania 3 i 4
+
+# Zadanie 3: Rozwiązywanie układu równań
+# Dla celów demonstracyjnych używamy losowych danych dla macierzy A i wektora b
+A = np.random.rand(20, 20)  # Przykładowa macierz 20x20
+b = np.random.rand(20)  # Przykładowy wektor 20-elementowy
+x, czas_rozwiązania = solve_linear_system(A, b)
+print("Rozwiązanie układu równań:", x)
+print("Czas wykonania:", czas_rozwiązania, "sekund")
+
+# Zadanie 4: Iteracyjny proces z macierzą B
+B = create_matrix_B()
+eta_values, k_min = iterative_process(B)
+print("Najmniejsze k, dla którego ||x^(k)||_2 < ||x^(0)||_2:", k_min)
+
+# Rysowanie wykresu eta_k
+plot_eta_values(eta_values)
