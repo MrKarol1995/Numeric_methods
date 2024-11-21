@@ -75,7 +75,6 @@ def brent_method(f, a, b, tol=1e-9, max_iter=100):
 
     raise RuntimeError("Metoda Brenta nie osiągnęła zbieżności w maksymalnej liczbie iteracji.")
 
-
 ### METODA SIECZNYCH ###
 def secant_method(f, x0, x1, tol=1e-9, max_iter=100):
     f0 = f(x0)
