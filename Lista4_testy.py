@@ -5,6 +5,7 @@ import math
 
 f1 = lambda x: np.tan(np.pi - x) - x
 
+
 def bisection2(f, a, b, error):
     fa, fb = f(a), f(b)
     if fa == 0:
