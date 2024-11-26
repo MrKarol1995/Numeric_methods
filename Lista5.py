@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.interpolate import CubicSpline, interp1d
 
-
 def quadratic_interpolation(h_values, rho_values): ##############
     """
     Aproksymacja kwadratowa dla funkcji rho(h) na podstawie podanych danych.
