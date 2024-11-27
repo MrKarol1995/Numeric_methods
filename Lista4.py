@@ -13,7 +13,6 @@ def f(x):
 def df(x):
     return -1 - (1 / np.cos(np.pi - x))**2
 
-
 ### METODA BRENT'A ###
 def brent_method(f, a, b, tol=1e-9, max_iter=100):
     fa = f(a)
