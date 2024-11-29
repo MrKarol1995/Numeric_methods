@@ -7,6 +7,7 @@ from scipy.optimize import fsolve, newton, brentq
 # Zad 1
 print("Zad 1")
 
+
 # Funkcja testowa: f(x) = tan(pi - x) - x
 f1 = lambda x: np.tan(np.pi - x) - x
 
