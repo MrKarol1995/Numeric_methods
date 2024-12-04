@@ -1,6 +1,7 @@
 import numpy as np
 from scipy import linalg
 
+
 # Zad 4
 print("Zad 4")
 
