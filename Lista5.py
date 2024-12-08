@@ -3,6 +3,7 @@ import sympy as sp
 import matplotlib.pyplot as plt
 from scipy.interpolate import CubicSpline, interp1d
 
+
 def lagrange_interpolation(x_points, y_points):
     """
     Implementacja interpolacji wielomianowej metodą Lagrange'a.
