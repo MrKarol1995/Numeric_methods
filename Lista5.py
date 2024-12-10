@@ -3,7 +3,6 @@ import sympy as sp
 import matplotlib.pyplot as plt
 from scipy.interpolate import CubicSpline, interp1d
 
-
 def lagrange_interpolation(x_points, y_points):
     """
     Implementacja interpolacji wielomianowej metodą Lagrange'a.
@@ -134,14 +133,14 @@ test_heights = np.linspace(0, 6, 100)  # Przykładowe wysokości do ewaluacji
 interpolated_rho = lagrange_rho_function(test_heights)
 
 # Wykres dla wizualizacji
-plt.plot(test_heights, interpolated_rho, label="Interpolacja Lagrange'a", color="blue")
+plt.plot(test_heights, interpolated_rho, label="Zad 1. Interpolacja Lagrange'a", color="blue")
 plt.scatter(h_values, rho_values, color="red", label="Punkty danych")
 plt.xlabel("Wysokość (km)")
 plt.ylabel("Gęstość powietrza (kg/m³)")
 plt.title("Interpolacja gęstości powietrza metodą Lagrange'a")
 plt.legend()
 plt.grid()
-#plt.show()
+plt.show()
 
 
 
@@ -184,13 +183,14 @@ interpolated_cD = [cD_function(Re) for Re in Re_to_interpolate]
 
 # Wyświetlanie wyników
 print("Interpolowany wielomian metodą Lagrange'a:")
-print(cD_polynomial)
+# print(cD_polynomial) ###########################################################
 print("\nWyniki interpolacji:")
 for Re, cD in zip(Re_to_interpolate, interpolated_cD):
     print(f"c_D dla Re = {Re}: {cD}")
 
 
 # Zadanie 4: Aproksymacja funkcji wykładniczej f(x) = a * exp(b * x)
+# logarytm z tego == log(a*exp(bx)) = c + bx
 x4 = np.array([1.2, 2.8, 4.3, 5.4, 6.8, 7.9])
 y4 = np.array([7.5, 16.1, 38.9, 67.0, 146.6, 266.2])
 a, b = exponential_fit(x4, y4)
@@ -198,15 +198,39 @@ f_exp = lambda x: a * np.exp(b * x)  # Utworzenie funkcji aproksymującej
 residuals = y4 - f_exp(x4)
 std_dev = np.std(residuals)
 
+#regresja liniowa klasyczna
+def linear_regression(x,y):
+    b = np.sum((x-np.mean(x)) * (y - np.mean(y)))/np.sum((x - np.mean(x))**2)
+    c = np.mean(y) - b * np.mean(x)
+    return b, c
+
+ys_log = np.log(y4)
+
+b4, c4 = linear_regression(x4, ys_log)
+a4 = np.exp(c4)
+f_approx = lambda x: a4 * np.exp(b4 * x)
+
+x_lin = np.linspace(1,9,1000)
+y_approx = f_approx(x_lin)
+
+plt.scatter(x4, y4, c="r")
+plt.title("Zadanie 4: Aproksymacja funkcją wykładniczą własna")
+plt.plot(x_lin, y_approx)
+plt.ylim(0,300)
+plt.xlim(0,9)
+plt.show()
+y_approx2 = f_approx(x4)
+errors = y4 - y_approx2
+
 print("Zadanie 4:")
 print(f"Funkcja wykładnicza: f(x) = {a:.3f} * exp({b:.3f} * x)")
-print(f"Odchylenie standardowe: {std_dev:.3f}")
+print(f"Odchylenie standardowe: {std_dev:.3f}, własne odchylenie: {np.std(errors)}")
 
 # Wykres dla zadania 4
 plt.figure(figsize=(10, 5))
 plt.scatter(x4, y4, label="Dane", color="blue")
 plt.plot(x4, f_exp(x4), label="Aproksymacja", color="red")
-plt.title("Zadanie 4: Aproksymacja funkcją wykładniczą")
+plt.title("Zadanie 4: Aproksymacja funkcją wykładniczą bib")
 plt.xlabel("x")
 plt.ylabel("y")
 plt.legend()
@@ -247,6 +271,23 @@ plt.legend()
 plt.grid()
 plt.show()
 
+
+def polynomial_fit(x_points, y_points, degree):
+    """
+    Dopasowanie wielomianu o zadanym stopniu.
+
+    Parametry:
+        x_points (np.ndarray): Współrzędne x punktów.
+        y_points (np.ndarray): Wartości funkcji w punktach x.
+        degree (int): Stopień wielomianu do dopasowania.
+
+    Zwraca:
+        numpy.polynomial.Polynomial: Wielomian dopasowany do danych.
+    """
+    coeffs = np.polyfit(x_points, y_points, degree)
+    return np.poly1d(coeffs)
+
+
 # Zadanie 6: Dopasowanie funkcji liniowej i kwadratowej do danych
 x6 = np.array([1.0, 2.5, 3.5, 4.0, 1.1, 1.8, 2.2, 3.7])
 y6 = np.array([6.008, 15.722, 27.13, 33.772, 5.257, 9.549, 11.098, 28.828])
@@ -256,6 +297,21 @@ linear_fit, quadratic_fit, _ = polynomial_fits(x6, y6)
 print("Zadanie 6:")
 print(f"Funkcja liniowa: {[linear_fit]}")
 print(f"Funkcja kwadratowa: {[quadratic_fit]}")
+
+# Interpolacja Lagrange'a
+lagrange_func, lagrange_poly = lagrange_interpolation_with_polynomial(x6, y6)
+
+# Dopasowanie funkcji liniowej i kwadratowej
+linear_fit = polynomial_fit(x6, y6, 1)
+quadratic_fit = polynomial_fit(x6, y6, 2)
+#print("Wielomian interpolacyjny Lagrange'a:")
+#print(lagrange_poly)
+
+print("Wielomiany metodą Lagrangea")
+print("\nWspółczynniki funkcji liniowej:")
+print(linear_fit)
+print("\nWspółczynniki funkcji kwadratowej:")
+print(quadratic_fit)
 
 # Wykres dla zadania 6
 plt.figure(figsize=(10, 5))
@@ -268,4 +324,30 @@ plt.xlabel("x")
 plt.ylabel("y")
 plt.legend()
 plt.grid()
+plt.show()
+
+# Tworzenie wykresu
+x_vals = np.linspace(min(x6), max(x6), 500)
+lagrange_vals = lagrange_func(x_vals)
+linear_vals = linear_fit(x_vals)
+quadratic_vals = quadratic_fit(x_vals)
+plt.figure(figsize=(10, 6))
+
+# Punkty danych
+plt.scatter(x6, y6, color='red', label='Dane', zorder=5)
+
+# Interpolacja Lagrange'a
+plt.plot(x_vals, lagrange_vals, label='Interpolacja Lagrange\'a', color='blue', linestyle='--')
+
+# Dopasowanie liniowe
+plt.plot(x_vals, linear_vals, label='Funkcja liniowa', color='green')
+
+# Dopasowanie kwadratowe
+plt.plot(x_vals, quadratic_vals, label='Funkcja kwadratowa', color='orange')
+
+plt.xlabel('x')
+plt.ylabel('y')
+plt.title('Zad 6 bis Interpolacja i dopasowanie wielomianów')
+plt.legend()
+plt.grid(True)
 plt.show()
