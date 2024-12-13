@@ -2,6 +2,7 @@ import numpy as np
 from scipy.special import roots_legendre
 from scipy.integrate import quad
 
+
 # Metoda Simpsona
 def simpson_rule(f, a, b, n):
     if n % 2 == 0:
