@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 def zad1_analytical_solution(x):
     return (31 / 32) * np.exp(-4 * x) + (1 / 4) * x ** 2 - (1 / 8) * x + (1 / 32)
 
-
 def euler_method(f, y0, x0, x_end, h):
     x_values = np.arange(x0, x_end + h, h)
     y_values = [y0]
@@ -14,7 +13,6 @@ def euler_method(f, y0, x0, x_end, h):
         y_next = y_values[-1] + h * f(x_values[i - 1], y_values[-1])
         y_values.append(y_next)
     return x_values, y_values
-
 
 def rk2_method(f, y0, x0, x_end, h):
     x_values = np.arange(x0, x_end + h, h)
@@ -25,7 +23,6 @@ def rk2_method(f, y0, x0, x_end, h):
         y_next = y_values[-1] + h * k2
         y_values.append(y_next)
     return x_values, y_values
-
 
 def rk4_method(f, y0, t0, t_end, h, *params):
     t_values = np.arange(t0, t_end + h, h)
@@ -57,10 +54,7 @@ for step in steps:
     print(f"\nWyniki dla h = {h}:")
     print("Euler:", y_euler[-1], "RK2:", y_rk2[-1], "RK4:", y_rk4[-1])
 
-
 # Zad 2
-
-
 # 2. Zadanie drugie: y' = sin(y), y(0) = 1
 def zad2_function(x, y):
     return np.sin(y)
@@ -82,7 +76,6 @@ plt.grid()
 plt.show()
 
 # Zad 3
-
 # 3. Zadanie trzecie: równanie wahadła
 def pendulum(t, y, Q, omega_hat, A_hat):
     theta, v = y
@@ -112,8 +105,6 @@ for scenario in scenarios:
     plt.legend()
     plt.grid()
     plt.show()
-
-
 
 
 # Parametry zadania
@@ -147,7 +138,6 @@ plt.grid()
 plt.show()
 
 # ZAd4
-
 # 4.1 Trajektoria bez oporów powietrza
 def projectile_no_air_resistance(v0, angle, g=9.81, t_max=10, dt=0.01):
     angle_rad = np.radians(angle)
@@ -213,12 +203,6 @@ plt.grid(True)
 plt.show()
 
 # Zad 5
-
-
-import numpy as np
-import matplotlib.pyplot as plt
-from scipy.integrate import solve_bvp
-
 # Definiowanie równania różniczkowego (zamiana na układ równań pierwszego rzędu)
 def fun(x, y):
     dydx = np.zeros_like(y)
