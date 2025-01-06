@@ -12,7 +12,6 @@ def simpson_rule(f, a, b, n):
     integral = h / 3 * (y[0] + 4 * np.sum(y[1:n-1:2]) + 2 * np.sum(y[2:n-2:2]) + y[-1])
     return integral
 
-
 def trapezoidal_rule(x, y):
     h = np.diff(x)
     return np.sum(h * (y[:-1] + y[1:]) / 2)
