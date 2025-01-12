@@ -13,6 +13,7 @@ def euler_method(f, y0, x0, x_end, h):
         y_next = y_values[-1] + h * f(x_values[i - 1], y_values[-1])
         y_values.append(y_next)
     return x_values, y_values
+    
 
 def rk2_method(f, y0, x0, x_end, h):
     x_values = np.arange(x0, x_end + h, h)
