@@ -60,7 +60,6 @@ for step in steps:
 def zad2_function(x, y):
     return np.sin(y)
 
-
 x0, x_end, h = 0, 0.5, 0.1
 y0 = 1
 x_euler, y_euler = euler_method(zad2_function, y0, x0, x_end, h)
